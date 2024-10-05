@@ -6,9 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+  /**
+       * Author: AlexistDev
+       * Email: Alexistdev@gmail.com
+       * Phone: 082371408678
+       * Github: https://github.com/alexistdev
+       */
+
     public function up(): void
     {
         Schema::create('cache', function (Blueprint $table) {

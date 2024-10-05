@@ -12,7 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->append(CekRole::class);
+        $middleware->alias([
+            'roles' => CekRole::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

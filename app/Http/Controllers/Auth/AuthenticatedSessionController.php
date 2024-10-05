@@ -25,16 +25,34 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
-
-        return redirect()->intended(route('dashboard', absolute: false));
+        /** Setup cookies */
+        if ($request->has('remember')) {
+            Cookie::queue('loginUser', $request->email, 1440);
+            Cookie::queue('loginPassword', $request->password, 1440);
+        }
+        $user = Auth::user();
+        $roleId = (int)$user->role_id;
+        /** Cek Auth Role */
+        switch ($roleId) {
+            case 1:
+                return redirect()->intended(route('adm.dashboard', absolute: false));
+            case 2:
+                return redirect()->intended(route('/guru/dashboard', absolute: false));
+            case 3:
+                return redirect()->intended(route('/siswa/dashboard', absolute: false));
+            default:
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                abort('404', 'NOT FOUND');
+        }
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
+    public
+    function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
 

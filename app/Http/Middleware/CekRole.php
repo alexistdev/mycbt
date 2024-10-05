@@ -15,15 +15,15 @@ class CekRole
          * Github: https://github.com/alexistdev
          */
 
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, $roles): Response
     {
-        $roles = $this->CekRoute($request->route());
-        return $next($request);
-    }
-
-    private function CekRoute($route)
-    {
-        $action = $route->getAction();
-        return isset($action['roles']) ? $action['roles'] : null;
+        $roles = explode(',', $roles);
+        foreach ($roles as $role) {
+            if ($request->user()->hasRole($role)) {
+                return $next($request);
+            }
+        }
+        return abort(404, 'NOT FOUND');
     }
 }
+

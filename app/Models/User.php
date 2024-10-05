@@ -41,29 +41,9 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    private function getUserRole(){
-        return $this->role()->getResults();
-    }
-
-    private function cekUserRole($role)
+    public function hasRole($role)
     {
-        return (strtolower($role)==strtolower($this->have_role->name)) ? true : false;
+        return strtolower($this->role->name) === strtolower($role);
     }
-
-    public function hasRole($roles)
-    {
-        $this->have_role = $this->getUserRole();
-        if(is_array($roles)){
-            foreach($roles as $role){
-                if($this->cekUserRole($role)){
-                    return true;
-                }
-            }
-        } else {
-            return $this->cekUserRole($roles);
-        }
-        return false;
-    }
-
 
 }
